@@ -1,0 +1,38 @@
+# CI of this repository: workflow-check, which builds the checks of the
+# repository's flake, among them the static tests of the workflows. The
+# repository has no jobs of its own, so check has no needs.
+name: test
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited] # edited: the title check
+  push:
+    branches: [main, "release/v*"]
+  schedule:
+    - cron: "23 4 * * 1"
+  workflow_dispatch: # dispatched checks of release pull requests (FY-0030)
+
+permissions: {}
+
+concurrency:
+  group: test-${{ github.ref }}
+  # A title or description edit must not cancel a long run.
+  cancel-in-progress: >-
+    ${{ github.event_name == 'pull_request'
+        && github.event.action != 'edited' }}
+
+jobs:
+  check:
+    # Dispatched runs post their final status on every outcome.
+    if: ${{ !cancelled() || github.event_name == 'workflow_dispatch' }}
+    uses: flakeyard/workflow-check/.github/workflows/check.yaml@30e031ba81beb738ab4cbe18425a8f4f7a6af552 # v0.1.0
+    permissions:
+      actions: read # own job name and the jobs of the run
+      contents: read # repository files through the contents API, checkout
+      pull-requests: read # the title of the pull request
+      statuses: write # commit statuses of dispatched runs
+    with:
+      needs: ${{ toJSON(needs) }}
+      flake: .
+      expect-checks: '["formatting","shell","unit"]'
+      renovate-presets: '["flakeyard/renovate-config"]'
