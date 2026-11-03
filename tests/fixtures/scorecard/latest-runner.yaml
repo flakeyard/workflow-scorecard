@@ -1,0 +1,13 @@
+# Meets every rule: ubuntu-latest is a supported runner.
+on: workflow_call
+permissions: {}
+jobs:
+  scorecard:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+      security-events: write
+    steps:
+      - uses: ossf/scorecard-action@fa7117db83c52d787ae5a89f350999701505d78e # v2.5.0

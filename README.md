@@ -16,7 +16,19 @@ builds the checks of the repository's flake: `tests/run.sh`, the static tests of
 the workflows (`checks.unit`), shellcheck and shfmt over the scripts
 (`checks.shell`) and nixfmt over the Nix files (`checks.formatting`). The suites
 in `tests/unit/workflows` have one file per workflow and share the helpers in
-`tests/lib`. They read the workflows with mikefarah `yq` v4 and fail without it;
+`tests/lib`.
+
+`tests/lib/scorecard.jq` holds the rules a Scorecard workflow must meet, as
+named `def`s: the rules the Scorecard server verifies before it accepts results
+([`verify_workflow.go`][verify-workflow]), and those of [FY-0031][fy-0031]:
+`permissions: {}` at the top level, only the Scorecard job, exactly its four
+permissions and every action pinned by full commit SHA. The server also checks
+that each pinned commit belongs to its action's repository; that needs the API
+and is not tested here. `tests/unit/lib/scorecard.sh` runs the rules on the
+workflows in `tests/fixtures/scorecard`: the valid ones break none, and each of
+the others breaks exactly the rules its first line names.
+
+The suites read the workflows with mikefarah `yq` v4 and fail without it;
 locally, run `nix shell nixpkgs#yq-go -c tests/run.sh`. Before a pull request,
 run `nix flake check`, actionlint, zizmor, prettier, markdownlint, typos and
 `reuse lint`.
@@ -42,6 +54,8 @@ yet. Until they are:
 [MIT](LICENSE).
 
 [scorecard]: https://github.com/ossf/scorecard
+[verify-workflow]:
+  https://github.com/ossf/scorecard-infra/blob/main/api/app/server/verify_workflow.go
 [workflow-check]: https://github.com/flakeyard/workflow-check
 [workflow-release]: https://github.com/flakeyard/workflow-release
 [fy-0022]:
