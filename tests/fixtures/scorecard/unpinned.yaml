@@ -1,0 +1,13 @@
+# Breaks pinned: an action referenced by tag.
+on: workflow_call
+permissions: {}
+jobs:
+  scorecard:
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+      security-events: write
+    steps:
+      - uses: ossf/scorecard-action@v2.5.0

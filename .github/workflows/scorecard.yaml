@@ -1,0 +1,45 @@
+# Reusable Scorecard workflow. A repository calls it from its own
+# scorecard.yaml; the job runs OpenSSF Scorecard on the default branch,
+# publishes the results of the calling repository and uploads them to its
+# code scanning. The Scorecard server verifies this file before it accepts
+# the results, so it holds only the Scorecard job, with no env, defaults,
+# container or services and only the actions the server allows. The other
+# triggers run Scorecard for this repository itself (FY-0031).
+name: scorecard
+
+on:
+  workflow_call:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "41 3 * * 1"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  scorecard:
+    # Results are accepted only for the default branch. A schedule event has
+    # no repository in its payload and always runs on the default branch.
+    if: >-
+      ${{ github.event_name == 'schedule'
+          || github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      actions: read # workflow runs, needed in private repositories
+      contents: read # checkout and the repository through the API
+      id-token: write # signs the published results
+      security-events: write # uploads the results to code scanning
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ossf/scorecard-action@fa7117db83c52d787ae5a89f350999701505d78e # v2.5.0
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          publish_results: true
+      - uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          sarif_file: results.sarif

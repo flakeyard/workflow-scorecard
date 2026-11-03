@@ -1,0 +1,14 @@
+# Breaks step-allowed: an action the server does not allow.
+on: workflow_call
+permissions: {}
+jobs:
+  scorecard:
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+      security-events: write
+    steps:
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: ossf/scorecard-action@fa7117db83c52d787ae5a89f350999701505d78e # v2.5.0
