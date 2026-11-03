@@ -122,9 +122,7 @@ Following [FY-0022][fy-0022], some checks of this repository are not released
 yet. Until they are:
 
 - actionlint, zizmor, prettier, markdownlint, typos and REUSE run locally before
-  every pull request; the atoms will provide them;
-- rulesets require no status checks until every repository has adopted
-  workflow-check.
+  every pull request; the atoms will provide them.
 
 ## License
 
