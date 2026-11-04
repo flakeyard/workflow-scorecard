@@ -1,4 +1,5 @@
-# The workflows and tests of the repository, as one source for the checks.
+# The workflows, scripts and tests of the repository, and the files the tests
+# compare, as one source for the checks.
 {
   perSystem =
     { pkgs, ... }:
@@ -7,7 +8,10 @@
         root = ../.;
         fileset = pkgs.lib.fileset.unions [
           ../.github
+          ../scripts
           ../tests
+          ../flake.lock
+          ../nixpkgs-eol
         ];
       };
     };

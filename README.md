@@ -113,8 +113,13 @@ run `nix flake check`, actionlint, zizmor, prettier, markdownlint, typos and
 
 The repository releases itself with [workflow-release][workflow-release] through
 [`release.yaml`](.github/workflows/release.yaml), whose release pull requests
-are checked by a dispatched run of `test.yaml`. The design follows
-[FY-0031][fy-0031] and [FY-0030][fy-0030].
+are checked by a dispatched run of `test.yaml`. The weekly workflow
+[`maintenance.yaml`](.github/workflows/maintenance.yaml), which is not a
+required check, runs `nix run .#check-eol -- nixpkgs-eol`
+([`scripts/check/eol.sh`](scripts/check/eol.sh)): it warns from 30 days before
+the end of life of the nixpkgs branch in `nixpkgs-eol` and fails after it,
+following [FY-0026][fy-0026]; `tests/unit/scripts` tests the script. The design
+follows [FY-0031][fy-0031] and [FY-0030][fy-0030].
 
 ## Bootstrap
 
@@ -136,6 +141,8 @@ yet. Until they are:
 [workflow-release]: https://github.com/flakeyard/workflow-release
 [fy-0022]:
   https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0022-bootstrap.md
+[fy-0026]:
+  https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0026-stable-nixpkgs.md
 [fy-0030]:
   https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0030-actions-workflows-and-release-bot.md
 [fy-0031]:
