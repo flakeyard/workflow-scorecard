@@ -98,7 +98,7 @@ workflow meets the rules below, its triggers, its condition and its steps.
 
 `tests/lib/scorecard.jq` holds the rules a Scorecard workflow must meet, as
 named `def`s: the rules the Scorecard server verifies before it accepts results
-([`verify_workflow.go`][verify-workflow]), and those of [FY-0031][fy-0031]:
+([`verify_workflow.go`][verify-workflow]), and those of [FY-0034][fy-0034]:
 `permissions: {}` at the top level, only the Scorecard job, exactly its four
 permissions and every action pinned by full commit SHA. The server also checks
 that each pinned commit belongs to its action's repository; that needs the API
@@ -119,7 +119,7 @@ required check, runs `nix run .#check-eol -- nixpkgs-eol`
 ([`scripts/check/eol.sh`](scripts/check/eol.sh)): it warns from 30 days before
 the end of life of the nixpkgs branch in `nixpkgs-eol` and fails after it,
 following [FY-0026][fy-0026]; `tests/unit/scripts` tests the script. The design
-follows [FY-0031][fy-0031] and [FY-0030][fy-0030].
+follows [FY-0034][fy-0034] and [FY-0030][fy-0030].
 
 ## Bootstrap
 
@@ -145,5 +145,5 @@ yet. Until they are:
   https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0026-stable-nixpkgs.md
 [fy-0030]:
   https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0030-actions-workflows-and-release-bot.md
-[fy-0031]:
-  https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0031-check-pull-requests-and-pushes-with-workflow-check.md
+[fy-0034]:
+  https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0034-check-every-repository-with-workflow-check.md

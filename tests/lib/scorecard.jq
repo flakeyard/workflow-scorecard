@@ -2,7 +2,7 @@
 # Prints one line per violation: "<rule>: <message>". The rules of the
 # Scorecard server, which verifies the workflow that signs the results, come
 # first (ossf/scorecard-infra, api/app/server/verify_workflow.go); the rules
-# of FY-0031 for workflow-scorecard follow.
+# of FY-0034 for workflow-scorecard follow.
 
 # The step actions the server allows in the Scorecard job.
 def allowed_actions: [
@@ -17,7 +17,7 @@ def allowed_actions: [
 # so strings compare in numeric order.
 def oldest_ubuntu: "22.04";
 def ubuntu_runner: "^ubuntu-(?<version>latest|[0-9]{2}\\.[0-9]{2})(-arm)?$";
-# The permissions of the Scorecard job, no more and no fewer (FY-0031).
+# The permissions of the Scorecard job, no more and no fewer (FY-0034).
 def scorecard_permissions: {
   "actions": "read",
   "contents": "read",
@@ -85,7 +85,7 @@ def step_allowed:
   | select(allowed_actions | index($action) | not)
   | violation("step-allowed"; "the server does not allow the step \(.)");
 
-# Rules of FY-0031 for the reusable workflow of workflow-scorecard.
+# Rules of FY-0034 for the reusable workflow of workflow-scorecard.
 def top_level_permissions:
   select(.permissions != {})
   | violation("top-level-permissions"; "the top-level permissions are not {}");
