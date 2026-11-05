@@ -9,7 +9,6 @@
             nativeBuildInputs = with pkgs; [
               bash
               coreutils
-              findutils
               jq
               yq-go
             ];
