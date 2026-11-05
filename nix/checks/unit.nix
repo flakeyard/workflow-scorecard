@@ -1,4 +1,5 @@
-# tests/run.sh passes: the static tests of the workflows.
+# tests/run.sh passes: the static tests of the workflows, the tests of the
+# Scorecard rules and the unit tests of the scripts.
 {
   perSystem =
     { pkgs, sources, ... }:
