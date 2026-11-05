@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2016 # jq expressions, not expansions.
 # Static tests of the product workflow: it meets the rules of the Scorecard
-# server and of FY-0031, and runs Scorecard only on the default branch.
+# server and of FY-0034, and runs Scorecard only on the default branch.
 
 : "${root:?}"
 
@@ -16,7 +16,7 @@ product_test() { workflow_check "$product_workflow" "scorecard.yaml: $1" "$2"; }
 # product_meets_rules: scorecard.yaml breaks none of the Scorecard rules.
 product_meets_rules() {
   local violations
-  start "scorecard.yaml: meets the rules of the Scorecard server and of FY-0031"
+  start "scorecard.yaml: meets the rules of the Scorecard server and of FY-0034"
   if ! violations=$(scorecard_violations "$root/.github/workflows/scorecard.yaml"); then
     report "the rules failed on scorecard.yaml"
   elif [[ -n $violations ]]; then

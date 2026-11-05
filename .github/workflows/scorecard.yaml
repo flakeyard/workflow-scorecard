@@ -4,7 +4,7 @@
 # code scanning. The Scorecard server verifies this file before it accepts
 # the results, so it holds only the Scorecard job, with no env, defaults,
 # container or services and only the actions the server allows. The other
-# triggers run Scorecard for this repository itself (FY-0031).
+# triggers run Scorecard for this repository itself (FY-0034).
 name: scorecard
 
 on:
