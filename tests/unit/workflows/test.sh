@@ -1,7 +1,8 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2016 # jq expressions, not expansions.
 # Static tests of the CI of this repository: it calls workflow-check as the
-# caller contract asks of every repository (FY-0034).
+# caller contract asks of every repository (FY-0034), and pins the shell library
+# whose harness the tests use once.
 
 : "${root:?}"
 
@@ -34,4 +35,5 @@ if require_yq test.yaml; then
     '.concurrency["cancel-in-progress"] | contains("github.event.action != '"'edited'"'")'
   ci_test "dispatched and edited pull requests are checked" \
     '.on | has("workflow_dispatch") and (.pull_request.types | index("edited") != null)'
+  check_library_pins
 fi

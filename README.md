@@ -88,13 +88,17 @@ repository runs Scorecard from exactly one workflow, so this one does not call
 itself by commit.
 
 The repository checks itself with [`test.yaml`](.github/workflows/test.yaml),
-which calls [workflow-check][workflow-check] as its only job. workflow-check
-builds the checks of the repository's flake: `tests/run.sh`, the static tests of
-the workflows (`checks.unit`), shellcheck and shfmt over the scripts
-(`checks.shell`) and nixfmt over the Nix files (`checks.formatting`). The suites
-in `tests/unit/workflows` have one file per workflow and share the helpers in
-`tests/lib`; `tests/unit/workflows/scorecard.sh` checks that the product
-workflow meets the rules below, its triggers, its condition and its steps.
+which calls [workflow-check][workflow-check] after a job that pins
+[action-shell-lib][action-shell-lib]. workflow-check builds the checks of the
+repository's flake: `tests/run.sh`, the static tests of the workflows
+(`checks.unit`), shellcheck and shfmt over the scripts (`checks.shell`) and
+nixfmt over the Nix files (`checks.formatting`). The tests use the harness of
+`internal/testing` of action-shell-lib at the commit that `test.yaml` pins:
+`checks.unit` fetches it, and a local run of `tests/run.sh` fetches it once into
+`~/.cache/flakeyard/action-shell-lib`. The suites in `tests/unit/workflows` have
+one file per workflow and share the helpers in `tests/lib`;
+`tests/unit/workflows/scorecard.sh` checks that the product workflow meets the
+rules below, its triggers, its condition and its steps.
 
 `tests/lib/scorecard.jq` holds the rules a Scorecard workflow must meet, as
 named `def`s: the rules the Scorecard server verifies before it accepts results
@@ -137,6 +141,7 @@ yet. Until they are:
 [scorecard-action]: https://github.com/ossf/scorecard-action
 [verify-workflow]:
   https://github.com/ossf/scorecard-infra/blob/main/api/app/server/verify_workflow.go
+[action-shell-lib]: https://github.com/flakeyard/action-shell-lib
 [workflow-check]: https://github.com/flakeyard/workflow-check
 [workflow-release]: https://github.com/flakeyard/workflow-release
 [fy-0022]:
