@@ -3,7 +3,8 @@
 # breaks exactly the rules listed for it, and the valid ones break none.
 
 : "${root:?}"
-readonly SCORECARD_FIXTURES=$root/tests/fixtures/scorecard
+# The fixtures, a path in the repository.
+readonly SCORECARD_FIXTURES=tests/fixtures/scorecard
 tested_fixtures=()
 
 # fixture_test FIXTURE [RULE...]: the workflow FIXTURE.yaml breaks exactly
@@ -11,25 +12,26 @@ tested_fixtures=()
 fixture_test() {
   local fixture=$1
   shift
-  local expected actual
+  local expected
   expected=$(printf '%s\n' "$@" | sort -u | paste -sd' ' -)
   tested_fixtures+=("$fixture.yaml")
-  start "scorecard rules: $fixture"
-  if ! actual=$(scorecard_broken_rules "$SCORECARD_FIXTURES/$fixture.yaml"); then
-    report "the rules failed on $fixture.yaml"
-  elif [[ $actual != "$expected" ]]; then
-    report "breaks '$actual', expected '$expected'"
-  fi
+  setup
+  run_lib "scorecard rules: $fixture" ok "" scorecard_broken_rules "$SCORECARD_FIXTURES/$fixture.yaml"
+  expect stdout "$expected"
   finish
+}
+
+# untested_fixtures: print the fixtures that no fixture_test has tested.
+untested_fixtures() {
+  comm -23 <(cd -- "$root/$SCORECARD_FIXTURES" && printf '%s\n' *.yaml | sort) \
+    <(printf '%s\n' "${tested_fixtures[@]}" | sort)
 }
 
 # every_fixture_tested: no fixture is left without a test.
 every_fixture_tested() {
-  local untested
-  untested=$(comm -23 <(cd -- "$SCORECARD_FIXTURES" && printf '%s\n' *.yaml | sort) \
-    <(printf '%s\n' "${tested_fixtures[@]}" | sort))
-  start "scorecard rules: every fixture is tested"
-  [[ -z $untested ]] || report "untested fixtures: $untested"
+  setup
+  run_lib "scorecard rules: every fixture is tested" ok "" untested_fixtures
+  expect stdout ""
   finish
 }
 

@@ -1,6 +1,6 @@
 # CI of this repository: workflow-check, which builds the checks of the
-# repository's flake, among them the static tests of the workflows. The
-# repository has no jobs of its own, so check has no needs.
+# repository's flake, among them the static tests of the workflows, after the
+# job that pins the shell library whose harness those tests use.
 name: test
 
 on:
@@ -22,7 +22,18 @@ concurrency:
         && github.event.action != 'edited' }}
 
 jobs:
+  # The tests run in the unit check of the flake, which takes the shell library
+  # at the commit of this step, so that the repository pins it once.
+  shell-lib:
+    name: Shell library
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - uses: flakeyard/action-shell-lib@4c8422d8a7fdb2b097b349f643efa8d196e0406b # v0.1.2
+
   check:
+    needs: [shell-lib] # every other job of the workflow
     # Dispatched runs post their final status on every outcome.
     if: ${{ !cancelled() || github.event_name == 'workflow_dispatch' }}
     uses: flakeyard/workflow-check/.github/workflows/check.yaml@be573996bc498dae2785bb0087e52cea34ae1b20 # v0.2.0
