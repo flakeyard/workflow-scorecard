@@ -96,9 +96,10 @@ nixfmt over the Nix files (`checks.formatting`). The tests use the harness of
 `internal/testing` of action-shell-lib at the commit that `test.yaml` pins:
 `checks.unit` fetches it, and a local run of `tests/run.sh` fetches it once into
 `~/.cache/flakeyard/action-shell-lib`. The suites in `tests/unit/workflows` have
-one file per workflow and share the helpers in `tests/lib`;
-`tests/unit/workflows/scorecard.sh` checks that the product workflow meets the
-rules below, its triggers, its condition and its steps.
+one file per workflow, run on `workflow.sh` of `internal/testing` and share the
+helpers in `tests/lib`; `tests/unit/workflows/scorecard.sh` checks that the
+product workflow meets the rules below, its triggers, its condition and its
+steps.
 
 `tests/lib/scorecard.jq` holds the rules a Scorecard workflow must meet, as
 named `def`s: the rules the Scorecard server verifies before it accepts results
