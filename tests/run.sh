@@ -40,6 +40,8 @@ source "$testing/checks.sh"
 # shellcheck source=/dev/null
 source "$testing/yaml.sh"
 # shellcheck source=/dev/null
+source "$testing/workflow.sh"
+# shellcheck source=/dev/null
 source "$testing/consumer/action.sh"
 # The scripts and the YAML files are paths in the repository.
 # shellcheck disable=SC2034 # read by internal/testing
