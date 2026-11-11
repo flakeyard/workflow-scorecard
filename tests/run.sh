@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-# Static tests of the workflows of this repository and unit tests of its
-# scripts, with the harness of internal/testing of the shell library. The
+# Static tests of the workflows of this repository and tests of its test
+# helpers, with the harness of internal/testing of the shell library. The
 # suites in tests/unit/workflows have one file per workflow and read workflows
-# with mikefarah yq v4, tests/unit/scripts has one file per script of
-# scripts/, and tests/unit/lib tests the helpers in tests/lib.
+# with mikefarah yq v4, and tests/unit/lib tests the helpers in tests/lib.
 # Usage: tests/run.sh
 # shellcheck source-path=SCRIPTDIR
 set -uo pipefail

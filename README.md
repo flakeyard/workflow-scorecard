@@ -91,7 +91,7 @@ The repository checks itself with [`test.yaml`](.github/workflows/test.yaml),
 which calls [workflow-check][workflow-check] after a job that pins
 [action-shell-lib][action-shell-lib]. workflow-check builds the checks of the
 repository's flake: `tests/run.sh`, the static tests of the workflows
-(`checks.unit`), shellcheck and shfmt over the scripts (`checks.shell`) and
+(`checks.unit`), shellcheck and shfmt over the test scripts (`checks.shell`) and
 nixfmt over the Nix files (`checks.formatting`). The tests use the harness of
 `internal/testing` of action-shell-lib at the commit that `test.yaml` pins:
 `checks.unit` fetches it, and a local run of `tests/run.sh` fetches it once into
@@ -118,13 +118,10 @@ run `nix flake check`, actionlint, zizmor, prettier, markdownlint, typos and
 
 The repository releases itself with [workflow-release][workflow-release] through
 [`release.yaml`](.github/workflows/release.yaml), whose release pull requests
-are checked by a dispatched run of `test.yaml`. The weekly workflow
-[`maintenance.yaml`](.github/workflows/maintenance.yaml), which is not a
-required check, runs `nix run .#check-eol -- nixpkgs-eol`
-([`scripts/check/eol.sh`](scripts/check/eol.sh)): it warns from 30 days before
-the end of life of the nixpkgs branch in `nixpkgs-eol` and fails after it,
-following [FY-0026][fy-0026]; `tests/unit/scripts` tests the script. The design
-follows [FY-0034][fy-0034] and [FY-0030][fy-0030].
+are checked by a dispatched run of `test.yaml`. The weekly run of `test.yaml`
+also checks the end of life of the nixpkgs branch that `flake.lock` follows,
+through workflow-check, as [FY-0036][fy-0036] decides. The design follows
+[FY-0034][fy-0034] and [FY-0030][fy-0030].
 
 ## Bootstrap
 
@@ -147,9 +144,9 @@ yet. Until they are:
 [workflow-release]: https://github.com/flakeyard/workflow-release
 [fy-0022]:
   https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0022-bootstrap.md
-[fy-0026]:
-  https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0026-stable-nixpkgs.md
 [fy-0030]:
   https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0030-actions-workflows-and-release-bot.md
 [fy-0034]:
   https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0034-check-every-repository-with-workflow-check.md
+[fy-0036]:
+  https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0036-check-the-end-of-life-of-nixpkgs-in-flake-lock.md

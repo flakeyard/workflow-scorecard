@@ -1,6 +1,6 @@
-# tests/run.sh passes: the static tests of the workflows, the tests of the
-# Scorecard rules and the unit tests of the scripts, with the harness of the
-# shell library at the commit that test.yaml pins, so that the pin exists once.
+# tests/run.sh passes: the static tests of the workflows and the tests of the
+# Scorecard rules, with the harness of the shell library at the commit that
+# test.yaml pins, so that the pin exists once.
 {
   perSystem =
     { pkgs, sources, ... }:
