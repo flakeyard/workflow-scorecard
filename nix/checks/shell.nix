@@ -1,4 +1,4 @@
-# The scripts and the tests pass shellcheck and are formatted by shfmt.
+# The test scripts pass shellcheck and are formatted by shfmt.
 {
   perSystem =
     { pkgs, sources, ... }:
