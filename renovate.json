@@ -11,6 +11,14 @@
       "description": "The flake only checks and tests this repository; consumers do not receive it (FY-0007)",
       "matchFileNames": ["flake.nix", "flake.lock", "nix/**"],
       "semanticCommitType": "ci"
+    },
+    {
+      "description": "The shell library runs only in the tests of this repository; consumers do not receive it (FY-0035, FY-0007)",
+      "matchPackageNames": [
+        "flakeyard/action-shell-lib",
+        "https://github.com/flakeyard/action-shell-lib"
+      ],
+      "semanticCommitType": "ci"
     }
   ]
 }
