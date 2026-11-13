@@ -83,6 +83,13 @@ grant.
 
 ## Development
 
+Open the repository in its dev container,
+[`.devcontainer/devcontainer.json`](.devcontainer/devcontainer.json), with
+"Reopen in Container" in VS Code or `devcontainer up --workspace-folder .`. It
+has Nix, and the checks below, such as `nix flake check`, run in it as in CI;
+tools that the image does not have come from nixpkgs, such as
+`nix run nixpkgs#actionlint`. Nix on the host works as well.
+
 The product workflow,
 [`.github/workflows/scorecard.yaml`](.github/workflows/scorecard.yaml), is also
 this repository's own Scorecard workflow: its triggers `push`, `schedule` and
@@ -115,9 +122,9 @@ workflows in `tests/fixtures/scorecard`: the valid ones break none, and each of
 the others breaks exactly the rules its first line names.
 
 The suites read the workflows with mikefarah `yq` v4 and fail without it;
-locally, run `nix shell nixpkgs#yq-go -c tests/run.sh`. Before a pull request,
-run `nix flake check`, actionlint, zizmor, prettier, markdownlint, typos and
-`reuse lint`.
+locally, run `nix shell nixpkgs#yq-go nixpkgs#jq -c tests/run.sh`. Before a pull
+request, run `nix flake check`, actionlint, zizmor, prettier, markdownlint,
+typos and `reuse lint`.
 
 The repository releases itself with [workflow-release][workflow-release] through
 [`release.yaml`](.github/workflows/release.yaml), whose release pull requests
