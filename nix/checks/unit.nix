@@ -3,10 +3,15 @@
 # test.yaml pins, so that the pin exists once.
 {
   perSystem =
-    { pkgs, sources, ... }:
+    {
+      pkgs,
+      root,
+      sources,
+      ...
+    }:
     let
       pin = builtins.match ".*uses: flakeyard/action-shell-lib@([0-9a-f]{40}) .*" (
-        builtins.readFile ../../.github/workflows/test.yaml
+        builtins.readFile (root + "/.github/workflows/test.yaml")
       );
       shellLib =
         if pin == null then
