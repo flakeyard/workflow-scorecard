@@ -45,5 +45,5 @@ jobs:
     with:
       needs: ${{ toJSON(needs) }}
       flake: .
-      expect-checks: '["formatting","shell","unit"]'
+      expect-checks: '["formatting","shell","unit","workflows"]'
       renovate-presets: '["flakeyard/renovate-config"]'
