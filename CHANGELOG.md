@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/flakeyard/workflow-scorecard/compare/v0.1.2...v0.1.3) (2026-11-13)
+
+
+### Bug Fixes
+
+* name the Scorecard job and cancel superseded runs ([#44](https://github.com/flakeyard/workflow-scorecard/issues/44)) ([3650014](https://github.com/flakeyard/workflow-scorecard/commit/365001459f89a40359a8fe12ea85e1d5ba7187b7))
+
 ## [0.1.2](https://github.com/flakeyard/workflow-scorecard/compare/v0.1.1...v0.1.2) (2026-11-11)
 
 
