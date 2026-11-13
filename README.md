@@ -88,7 +88,7 @@ Open the repository in its dev container,
 "Reopen in Container" in VS Code or `devcontainer up --workspace-folder .`. It
 has Nix, and the checks below, such as `nix flake check`, run in it as in CI;
 tools that the image does not have come from nixpkgs, such as
-`nix run nixpkgs#actionlint`. Nix on the host works as well.
+`nix run nixpkgs#typos`. Nix on the host works as well.
 
 The product workflow,
 [`.github/workflows/scorecard.yaml`](.github/workflows/scorecard.yaml), is also
@@ -102,9 +102,11 @@ which calls [workflow-check][workflow-check] after a job that pins
 [action-shell-lib][action-shell-lib]. workflow-check builds the checks of the
 repository's flake: `tests/run.sh`, the static tests of the workflows
 (`checks.unit`), shellcheck and shfmt over the test scripts (`checks.shell`) and
-nixfmt over the Nix files (`checks.formatting`). The tests use the harness of
-`internal/testing` of action-shell-lib at the commit that `test.yaml` pins:
-`checks.unit` fetches it, and a local run of `tests/run.sh` fetches it once into
+nixfmt over the Nix files (`checks.formatting`), and
+[atom-workflows][atom-workflows] lints the workflows with actionlint and zizmor
+(`checks.workflows`). The tests use the harness of `internal/testing` of
+action-shell-lib at the commit that `test.yaml` pins: `checks.unit` fetches it,
+and a local run of `tests/run.sh` fetches it once into
 `~/.cache/flakeyard/action-shell-lib`. The suites in `tests/unit/workflows` have
 one file per workflow, run on `workflow.sh` of `internal/testing` and share the
 helpers in `tests/lib`; `tests/unit/workflows/scorecard.sh` checks that the
@@ -123,8 +125,7 @@ the others breaks exactly the rules its first line names.
 
 The suites read the workflows with mikefarah `yq` v4 and fail without it;
 locally, run `nix shell nixpkgs#yq-go nixpkgs#jq -c tests/run.sh`. Before a pull
-request, run `nix flake check`, actionlint, zizmor, prettier, markdownlint,
-typos and `reuse lint`.
+request, run `nix flake check`, prettier, markdownlint, typos and `reuse lint`.
 
 The repository releases itself with [workflow-release][workflow-release] through
 [`release.yaml`](.github/workflows/release.yaml), whose release pull requests
@@ -138,8 +139,8 @@ through workflow-check, as [FY-0036][fy-0036] decides. The design follows
 Following [FY-0022][fy-0022], some checks of this repository are not released
 yet. Until they are:
 
-- actionlint, zizmor, prettier, markdownlint, typos and REUSE run locally before
-  every pull request; the atoms will provide them.
+- prettier, markdownlint, typos and REUSE run locally before every pull request;
+  the atoms will provide them.
 
 ## License
 
@@ -150,6 +151,7 @@ yet. Until they are:
 [verify-workflow]:
   https://github.com/ossf/scorecard-infra/blob/main/api/app/server/verify_workflow.go
 [action-shell-lib]: https://github.com/flakeyard/action-shell-lib
+[atom-workflows]: https://github.com/flakeyard/atom-workflows
 [workflow-check]: https://github.com/flakeyard/workflow-check
 [workflow-release]: https://github.com/flakeyard/workflow-release
 [fy-0022]:
