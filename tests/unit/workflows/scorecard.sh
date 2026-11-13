@@ -29,6 +29,9 @@ if require_yq scorecard.yaml && require_workflow scorecard.yaml; then
     '.on | has("workflow_call") and .workflow_call == null'
   product_test "this repository runs it on main, weekly and on dispatch" \
     '.on | .push == {"branches":["main"]} and (.schedule | length == 1) and has("workflow_dispatch")'
+  product_test "the job is named after its id" '.jobs.scorecard.name == "scorecard"'
+  product_test "a newer run of the caller's workflow and ref cancels an older one" \
+    '.concurrency == {"group": "workflow-scorecard-${{ github.workflow }}-${{ github.ref }}", "cancel-in-progress": true}'
   product_test "the job runs only on the default branch" \
     ".jobs.scorecard | condition == \"$SCORECARD_CONDITION\""
   product_test "the job runs on ubuntu-24.04 with a timeout" \

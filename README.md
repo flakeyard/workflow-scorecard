@@ -69,6 +69,9 @@ example in the README:
   ref of the call and checks its content, not the caller's file; this file
   therefore holds only the Scorecard job and changes only within the rules of
   the server.
+- **One run at a time.** A newer run of the calling workflow on the same ref
+  cancels an older one. The concurrency group starts with `workflow-scorecard-`,
+  so it differs from a group the caller sets.
 
 The workflow takes no inputs and no secrets and has no outputs.
 

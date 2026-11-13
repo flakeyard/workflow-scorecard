@@ -17,8 +17,16 @@ on:
 
 permissions: {}
 
+# A newer run of the same workflow and ref cancels an older one. In a call,
+# github.workflow and github.ref are those of the caller; the prefix keeps the
+# group apart from a group of the caller, which would deadlock the call.
+concurrency:
+  group: workflow-scorecard-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   scorecard:
+    name: scorecard
     # Results are accepted only for the default branch. A schedule event has
     # no repository in its payload and always runs on the default branch.
     if: >-
