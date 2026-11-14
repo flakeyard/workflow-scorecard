@@ -5,7 +5,7 @@
 : "${root:?}"
 
 # release_test NAME FILTER: FILTER is true of release.yaml.
-release_test() { workflow_check "$release_workflow" "release.yaml: $1" "$2"; }
+release_test() { workflow_check "${release_workflow}" "release.yaml: $1" "$2"; }
 
 if require_yq release.yaml && require_workflow test.yaml; then
   release_workflow=$(load_workflow release.yaml)

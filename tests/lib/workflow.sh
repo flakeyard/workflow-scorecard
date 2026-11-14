@@ -10,10 +10,10 @@
 # fails a test of FILE.
 require_workflow() {
   local file=$1
-  [[ -f $root/.github/workflows/$file ]] && return 0
+  [[ -f ${root}/.github/workflows/${file} ]] && return 0
   setup
-  current="$file: the workflow exists"
-  report "no .github/workflows/$file"
+  current="${file}: the workflow exists"
+  report "no .github/workflows/${file}"
   finish
   return 1
 }

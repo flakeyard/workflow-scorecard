@@ -11,7 +11,7 @@ readonly SCORECARD_CONDITION="\${{ github.event_name == 'schedule' || github.ref
 readonly SCORECARD_STEPS='["actions/checkout","ossf/scorecard-action","github/codeql-action/upload-sarif"]'
 
 # product_test NAME FILTER: FILTER is true of scorecard.yaml.
-product_test() { workflow_check "$product_workflow" "scorecard.yaml: $1" "$2"; }
+product_test() { workflow_check "${product_workflow}" "scorecard.yaml: $1" "$2"; }
 
 # product_meets_rules: scorecard.yaml breaks none of the Scorecard rules.
 product_meets_rules() {
@@ -33,11 +33,11 @@ if require_yq scorecard.yaml && require_workflow scorecard.yaml; then
   product_test "a newer run of the caller's workflow and ref cancels an older one" \
     '.concurrency == {"group": "workflow-scorecard-${{ github.workflow }}-${{ github.ref }}", "cancel-in-progress": true}'
   product_test "the job runs only on the default branch" \
-    ".jobs.scorecard | condition == \"$SCORECARD_CONDITION\""
+    ".jobs.scorecard | condition == \"${SCORECARD_CONDITION}\""
   product_test "the job runs on ubuntu-24.04 with a timeout" \
     '.jobs.scorecard | .["runs-on"] == "ubuntu-24.04" and (.["timeout-minutes"] | type == "number")'
   product_test "checkout, Scorecard and the upload, in this order" \
-    "[.jobs.scorecard.steps[].uses | sub(\"@.*\$\"; \"\")] == $SCORECARD_STEPS"
+    "[.jobs.scorecard.steps[].uses | sub(\"@.*\$\"; \"\")] == ${SCORECARD_STEPS}"
   product_test "checkout keeps no credentials" \
     '.jobs.scorecard.steps[0].with == {"persist-credentials": false}'
   product_test "Scorecard publishes its results as SARIF" \
