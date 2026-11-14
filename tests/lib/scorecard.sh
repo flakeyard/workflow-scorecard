@@ -10,13 +10,18 @@ readonly SCORECARD_RULES=${root}/tests/lib/scorecard.jq
 # at PATH, in the repository, one per line; fails when the file cannot be
 # read.
 scorecard_violations() {
-  local path=$1
-  load_yaml "${path}" | jq -r -f "${SCORECARD_RULES}"
+  local path=$1 json
+  json=$(load_yaml "${path}") || return
+  jq -r -f "${SCORECARD_RULES}" <<<"${json}"
 }
 
 # scorecard_broken_rules PATH: print the rules the workflow at PATH, in the
-# repository, breaks, sorted and separated by spaces.
+# repository, breaks, sorted and separated by spaces; fails when the file
+# cannot be read.
 scorecard_broken_rules() {
-  local path=$1
-  scorecard_violations "${path}" | cut -d: -f1 | sort -u | paste -sd' ' -
+  local path=$1 rules
+  rules=$(scorecard_violations "${path}") || return
+  rules=$(cut -d: -f1 <<<"${rules}") || return
+  rules=$(sort -u <<<"${rules}") || return
+  printf '%s\n' "${rules//$'\n'/ }"
 }

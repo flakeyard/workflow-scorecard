@@ -13,7 +13,11 @@ fixture_test() {
   local fixture=$1
   shift
   local expected
-  expected=$(printf '%s\n' "$@" | sort -u | paste -sd' ' -)
+  expected=$(
+    IFS=$'\n'
+    sort -u <<<"$*"
+  )
+  expected=${expected//$'\n'/ }
   tested_fixtures+=("${fixture}.yaml")
   setup
   run_lib "scorecard rules: ${fixture}" ok "" scorecard_broken_rules "${SCORECARD_FIXTURES}/${fixture}.yaml"
@@ -23,8 +27,11 @@ fixture_test() {
 
 # untested_fixtures: print the fixtures that no fixture_test has tested.
 untested_fixtures() {
-  comm -23 <(cd -- "${root}/${SCORECARD_FIXTURES}" && printf '%s\n' *.yaml | sort) \
-    <(printf '%s\n' "${tested_fixtures[@]}" | sort)
+  local fixture tested=" ${tested_fixtures[*]} "
+  for fixture in "${root}/${SCORECARD_FIXTURES}"/*.yaml; do
+    fixture=${fixture##*/}
+    [[ ${tested} == *" ${fixture} "* ]] || printf '%s\n' "${fixture}"
+  done
 }
 
 # every_fixture_tested: no fixture is left without a test.
