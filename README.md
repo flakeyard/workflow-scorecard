@@ -85,10 +85,18 @@ grant.
 
 Open the repository in its dev container,
 [`.devcontainer/devcontainer.json`](.devcontainer/devcontainer.json), with
-"Reopen in Container" in VS Code or `devcontainer up --workspace-folder .`. It
-has Nix, and the checks below, such as `nix flake check`, run in it as in CI;
-tools that the image does not have come from nixpkgs, such as
-`nix run nixpkgs#typos`. Nix on the host works as well.
+"Reopen in Container" in VS Code or `devcontainer up --workspace-folder .`.
+`direnv` loads the development shell of [`flake.nix`](flake.nix) through
+[`.envrc`](.envrc) ([FY-0012][fy-0012]): [atom-workspace][atom-workspace] joins
+the tools of the atoms and `jq` and mikefarah `yq` for `tests/run.sh`, and
+installs the git hooks each time the shell starts. The container runs
+`direnv allow` when it is created; run it once in every other worktree, and run
+`direnv block` before you check out a branch you do not trust, since entering
+the directory runs that branch's shell hook. Commit inside the container, whose
+Nix store has the tools of the hooks. The checks below, such as
+`nix flake check`, run in it as in CI; tools that the shell does not have come
+from nixpkgs, such as `nix run nixpkgs#typos`. Nix on the host works as well:
+`direnv allow` or `nix develop` gives the same shell.
 
 The product workflow,
 [`.github/workflows/scorecard.yaml`](.github/workflows/scorecard.yaml), is also
@@ -123,9 +131,9 @@ and is not tested here. `tests/unit/lib/scorecard.sh` runs the rules on the
 workflows in `tests/fixtures/scorecard`: the valid ones break none, and each of
 the others breaks exactly the rules its first line names.
 
-The suites read the workflows with mikefarah `yq` v4 and fail without it;
-locally, run `nix shell nixpkgs#yq-go nixpkgs#jq -c tests/run.sh`. Before a pull
-request, run `nix flake check`, prettier, markdownlint, typos and `reuse lint`.
+The suites read the workflows with mikefarah `yq` v4, which the development
+shell has, and fail without it. Before a pull request, run `nix flake check`,
+prettier, markdownlint, typos and `reuse lint`.
 
 The repository releases itself with [workflow-release][workflow-release] through
 [`release.yaml`](.github/workflows/release.yaml), whose release pull requests
@@ -162,3 +170,6 @@ yet. Until they are:
   https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0034-check-every-repository-with-workflow-check.md
 [fy-0036]:
   https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0036-check-the-end-of-life-of-nixpkgs-in-flake-lock.md
+[atom-workspace]: https://github.com/flakeyard/atom-workspace
+[fy-0012]:
+  https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0012-develop-in-container.md
