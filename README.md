@@ -109,8 +109,10 @@ The repository checks itself with [`test.yaml`](.github/workflows/test.yaml),
 which calls [workflow-check][workflow-check] after a job that pins
 [action-shell-lib][action-shell-lib]. workflow-check builds the checks of the
 repository's flake: `tests/run.sh`, the static tests of the workflows
-(`checks.unit`), shellcheck and shfmt over the test scripts (`checks.shell`) and
-nixfmt over the Nix files (`checks.formatting`), and
+(`checks.unit`), and the checks of the atoms: [atom-nix][atom-nix] lints the Nix
+files with statix, deadnix and its relative paths hook (`checks.nix`),
+[atom-shell][atom-shell] lints the scripts with shellcheck (`checks.shell`),
+nixfmt and shfmt check their formatting through treefmt (`checks.treefmt`), and
 [atom-workflows][atom-workflows] lints the workflows with actionlint and zizmor
 (`checks.workflows`). The tests use the harness of `internal/testing` of
 action-shell-lib at the commit that `test.yaml` pins: `checks.unit` fetches it,
@@ -159,6 +161,8 @@ yet. Until they are:
 [verify-workflow]:
   https://github.com/ossf/scorecard-infra/blob/main/api/app/server/verify_workflow.go
 [action-shell-lib]: https://github.com/flakeyard/action-shell-lib
+[atom-nix]: https://github.com/flakeyard/atom-nix
+[atom-shell]: https://github.com/flakeyard/atom-shell
 [atom-workflows]: https://github.com/flakeyard/atom-workflows
 [workflow-check]: https://github.com/flakeyard/workflow-check
 [workflow-release]: https://github.com/flakeyard/workflow-release
