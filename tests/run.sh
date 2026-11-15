@@ -20,39 +20,39 @@ readonly LIBRARY_PIN_RE='uses: flakeyard/action-shell-lib@([0-9a-f]{40})'
 load_library() {
   local file=$1 commit
   [[ -z ${SHELL_LIB-} ]] || return 0
-  [[ $(<"$file") =~ $LIBRARY_PIN_RE ]] || { echo "$file pins no action-shell-lib" >&2 && exit 2; }
+  [[ $(<"${file}") =~ ${LIBRARY_PIN_RE} ]] || { echo "${file} pins no action-shell-lib" >&2 && exit 2; }
   commit=${BASH_REMATCH[1]}
-  export SHELL_LIB=${XDG_CACHE_HOME:-$HOME/.cache}/flakeyard/action-shell-lib/$commit
+  export SHELL_LIB=${XDG_CACHE_HOME:-${HOME}/.cache}/flakeyard/action-shell-lib/${commit}
   # HEAD is set once the checkout is complete, so a failed fetch is repeated.
-  git -C "$SHELL_LIB" rev-parse -q --verify HEAD &>/dev/null || { git init -q "$SHELL_LIB" \
-    && git -C "$SHELL_LIB" fetch -q --depth 1 "$LIBRARY_URL" "$commit" \
-    && git -C "$SHELL_LIB" checkout -qf FETCH_HEAD; } || exit 2
+  git -C "${SHELL_LIB}" rev-parse -q --verify HEAD &>/dev/null || { git init -q "${SHELL_LIB}" \
+    && git -C "${SHELL_LIB}" fetch -q --depth 1 "${LIBRARY_URL}" "${commit}" \
+    && git -C "${SHELL_LIB}" checkout -qf FETCH_HEAD; } || exit 2
 }
 
-load_library "$root/.github/workflows/test.yaml"
+load_library "${root}/.github/workflows/test.yaml"
 # The harness of the library; not its public API, used only by tests.
-testing=$SHELL_LIB/internal/testing
+testing=${SHELL_LIB}/internal/testing
 # shellcheck source=/dev/null
-source "$testing/case.sh"
+source "${testing}/case.sh"
 # shellcheck source=/dev/null
-source "$testing/checks.sh"
+source "${testing}/checks.sh"
 # shellcheck source=/dev/null
-source "$testing/yaml.sh"
+source "${testing}/yaml.sh"
 # shellcheck source=/dev/null
-source "$testing/workflow.sh"
+source "${testing}/workflow.sh"
 # shellcheck source=/dev/null
-source "$testing/consumer/action.sh"
+source "${testing}/consumer/action.sh"
 # The scripts and the YAML files are paths in the repository.
 # shellcheck disable=SC2034 # read by internal/testing
-code_root=$root
+code_root=${root}
 # shellcheck source=lib/workflow.sh
-source "$root/tests/lib/workflow.sh"
+source "${root}/tests/lib/workflow.sh"
 # shellcheck source=lib/scorecard.sh
-source "$root/tests/lib/scorecard.sh"
+source "${root}/tests/lib/scorecard.sh"
 
-for suite in "$root"/tests/unit/**/*.sh; do
+for suite in "${root}"/tests/unit/**/*.sh; do
   # shellcheck source=/dev/null
-  source "$suite"
+  source "${suite}"
 done
 
 conclude
