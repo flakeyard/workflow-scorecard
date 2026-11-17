@@ -107,18 +107,18 @@ itself by commit.
 
 The repository checks itself with [`test.yaml`](.github/workflows/test.yaml),
 which calls [workflow-check][workflow-check] after a job that pins
-[action-shell-lib][action-shell-lib]. workflow-check builds the checks of the
-repository's flake: `tests/run.sh`, the static tests of the workflows
-(`checks.unit`), and the checks of the atoms: [atom-nix][atom-nix] lints the Nix
-files with statix, deadnix and its relative paths hook (`checks.nix`),
-[atom-shell][atom-shell] lints the scripts with shellcheck (`checks.shell`),
-nixfmt and shfmt check their formatting through treefmt (`checks.treefmt`), and
+[lib-actions][lib-actions]. workflow-check builds the checks of the repository's
+flake: `tests/run.sh`, the static tests of the workflows (`checks.unit`), and
+the checks of the atoms: [atom-nix][atom-nix] lints the Nix files with statix,
+deadnix and its relative paths hook (`checks.nix`), [atom-shell][atom-shell]
+lints the scripts with shellcheck (`checks.shell`), nixfmt and shfmt check their
+formatting through treefmt (`checks.treefmt`), and
 [atom-workflows][atom-workflows] lints the workflows with actionlint and zizmor
 (`checks.workflows`). The tests use the harness of `internal/testing` of
-action-shell-lib at the commit that `test.yaml` pins: `checks.unit` fetches it,
-and a local run of `tests/run.sh` fetches it once into
-`~/.cache/flakeyard/action-shell-lib`. The suites in `tests/unit/workflows` have
-one file per workflow, run on `workflow.sh` of `internal/testing` and share the
+lib-actions at the commit that `test.yaml` pins: `checks.unit` fetches it, and a
+local run of `tests/run.sh` fetches it once into
+`~/.cache/flakeyard/lib-actions`. The suites in `tests/unit/workflows` have one
+file per workflow, run on `workflow.sh` of `internal/testing` and share the
 helpers in `tests/lib`; `tests/unit/workflows/scorecard.sh` checks that the
 product workflow meets the rules below, its triggers, its condition and its
 steps.
@@ -160,7 +160,7 @@ yet. Until they are:
 [scorecard-action]: https://github.com/ossf/scorecard-action
 [verify-workflow]:
   https://github.com/ossf/scorecard-infra/blob/main/api/app/server/verify_workflow.go
-[action-shell-lib]: https://github.com/flakeyard/action-shell-lib
+[lib-actions]: https://github.com/flakeyard/lib-actions
 [atom-nix]: https://github.com/flakeyard/atom-nix
 [atom-shell]: https://github.com/flakeyard/atom-shell
 [atom-workflows]: https://github.com/flakeyard/atom-workflows
