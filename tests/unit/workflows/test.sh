@@ -32,7 +32,7 @@ if require_yq test.yaml; then
   ci_test "check forbids configuration files of atom tools (FY-0037)" \
     '.jobs.check.with["forbid-tool-configs"] == true'
   ci_test "check builds the checks of the repository's flake" \
-    '.jobs.check.with | .flake == "." and (.["expect-checks"] | fromjson | sort) == ["nix","shell","treefmt","unit","workflows"]'
+    '.jobs.check.with | .flake == "." and (.["expect-checks"] | fromjson | sort) == ["data-formats","markdown","nix","shell","text","treefmt","unit","workflows"]'
   ci_test "an edit of a pull request cancels no run" \
     '.concurrency["cancel-in-progress"] | contains("github.event.action != '"'edited'"'")'
   ci_test "dispatched and edited pull requests are checked" \
