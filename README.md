@@ -95,7 +95,7 @@ installs the git hooks each time the shell starts. The container runs
 the directory runs that branch's shell hook. Commit inside the container, whose
 Nix store has the tools of the hooks. The checks below, such as
 `nix flake check`, run in it as in CI; tools that the shell does not have come
-from nixpkgs, such as `nix run nixpkgs#typos`. Nix on the host works as well:
+from nixpkgs, such as `nix run nixpkgs#reuse`. Nix on the host works as well:
 `direnv allow` or `nix develop` gives the same shell.
 
 The product workflow,
@@ -111,8 +111,15 @@ which calls [workflow-check][workflow-check] after a job that pins
 flake: `tests/run.sh`, the static tests of the workflows (`checks.unit`), and
 the checks of the atoms: [atom-nix][atom-nix] lints the Nix files with statix,
 deadnix and its relative paths hook (`checks.nix`), [atom-shell][atom-shell]
-lints the scripts with shellcheck (`checks.shell`), nixfmt and shfmt check their
-formatting through treefmt (`checks.treefmt`), and
+lints the scripts with shellcheck (`checks.shell`),
+[atom-markdown][atom-markdown] lints the Markdown files with markdownlint and
+checks their links inside the repository with lychee (`checks.markdown`),
+[atom-text][atom-text] checks the spelling of every file with typos and its line
+endings, final newline and trailing whitespace with editorconfig-checker
+(`checks.text`), [atom-data-formats][atom-data-formats] lints the YAML, JSON and
+TOML files with yamllint, biome and taplo and the metadata of Renovate with
+check-jsonschema (`checks.data-formats`), nixfmt, shfmt, prettier and taplo
+check the formatting through treefmt (`checks.treefmt`), and
 [atom-workflows][atom-workflows] lints the workflows with actionlint and zizmor
 (`checks.workflows`). The tests use the harness of `internal/testing` of
 lib-actions at the commit that `test.yaml` pins: `checks.unit` fetches it, and a
@@ -134,14 +141,16 @@ workflows in `tests/fixtures/scorecard`: the valid ones break none, and each of
 the others breaks exactly the rules its first line names.
 
 The suites read the workflows with mikefarah `yq` v4, which the development
-shell has, and fail without it. Before a pull request, run `nix flake check`,
-prettier, markdownlint, typos and `reuse lint`.
+shell has, and fail without it. Before a pull request, run `nix flake check` and
+`reuse lint`.
 
 The repository releases itself with [workflow-release][workflow-release] through
 [`release.yaml`](.github/workflows/release.yaml), whose release pull requests
 are checked by a dispatched run of `test.yaml`. The weekly run of `test.yaml`
 also checks the end of life of the nixpkgs branch that `flake.lock` follows,
-through workflow-check, as [FY-0036][fy-0036] decides. The design follows
+through workflow-check, as [FY-0036][fy-0036] decides, checks every link of the
+Markdown files and runs the audits of zizmor that need the network, with the
+apps `markdown-links` and `workflows-online`. The design follows
 [FY-0034][fy-0034] and [FY-0030][fy-0030].
 
 ## Bootstrap
@@ -149,8 +158,7 @@ through workflow-check, as [FY-0036][fy-0036] decides. The design follows
 Following [FY-0022][fy-0022], some checks of this repository are not released
 yet. Until they are:
 
-- prettier, markdownlint, typos and REUSE run locally before every pull request;
-  the atoms will provide them.
+- REUSE runs locally before every pull request; an atom will provide it.
 
 ## License
 
@@ -161,8 +169,11 @@ yet. Until they are:
 [verify-workflow]:
   https://github.com/ossf/scorecard-infra/blob/main/api/app/server/verify_workflow.go
 [lib-actions]: https://github.com/flakeyard/lib-actions
+[atom-data-formats]: https://github.com/flakeyard/atom-data-formats
+[atom-markdown]: https://github.com/flakeyard/atom-markdown
 [atom-nix]: https://github.com/flakeyard/atom-nix
 [atom-shell]: https://github.com/flakeyard/atom-shell
+[atom-text]: https://github.com/flakeyard/atom-text
 [atom-workflows]: https://github.com/flakeyard/atom-workflows
 [workflow-check]: https://github.com/flakeyard/workflow-check
 [workflow-release]: https://github.com/flakeyard/workflow-release
