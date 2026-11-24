@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.4](https://github.com/flakeyard/workflow-scorecard/compare/v0.1.3...v0.1.4) (2026-11-24)
+
+
+### Bug Fixes
+
+* **deps:** update github/codeql-action action to v4.39.4 ([#96](https://github.com/flakeyard/workflow-scorecard/issues/96)) ([6699874](https://github.com/flakeyard/workflow-scorecard/commit/669987439e85941d972d4511a69da402245f8db4))
+* **deps:** update ossf/scorecard-action action to v2.6.0 ([#95](https://github.com/flakeyard/workflow-scorecard/issues/95)) ([6480f40](https://github.com/flakeyard/workflow-scorecard/commit/6480f407821837352774dc3fd1d4a17bdaf4ec5c))
+
 ## [0.1.3](https://github.com/flakeyard/workflow-scorecard/compare/v0.1.2...v0.1.3) (2026-11-13)
 
 
